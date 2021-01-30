@@ -28,7 +28,7 @@ let package = Package(
             dependencies: ["libcmark"],
             path: "Source/",
             exclude: ["cmark", "Down.h"],
-            resources: [.copy("Resources/")]
+            resources: [.copy("Resources/DownView.bundle")]
         ),
         .testTarget(
             name: "DownTests",

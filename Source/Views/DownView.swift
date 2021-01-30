@@ -38,7 +38,8 @@ open class DownView: WKWebView {
         if let templateBundle = templateBundle {
             self.bundle = templateBundle
         } else {
-            let url = Bundle.module.url(forResource: "DownView", withExtension: "bundle")!
+            let moduleBundle = Bundle.moduleBundle ?? Bundle(for: DownView.self)
+            let url = moduleBundle.url(forResource: "DownView", withExtension: "bundle")!
             self.bundle = Bundle(url: url)!
         }
 
@@ -222,3 +223,34 @@ private extension WKNavigationDelegate {
 
 #endif
 #endif // !os(Linux)
+
+
+import class Foundation.Bundle
+
+private class BundleFinder {}
+
+extension Foundation.Bundle {
+  /// Returns the resource bundle associated with the current Swift module.
+  static var moduleBundle: Bundle? = {
+    let bundleName = "Down_Down"
+
+    let candidates = [
+      // Bundle should be present here when the package is linked into an App.
+      Bundle.main.resourceURL,
+
+      // Bundle should be present here when the package is linked into a framework.
+      Bundle(for: BundleFinder.self).resourceURL,
+
+      // For command-line tools.
+      Bundle.main.bundleURL,
+    ]
+
+    for candidate in candidates {
+      let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
+      if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
+        return bundle
+      }
+    }
+    return nil
+  }()
+}

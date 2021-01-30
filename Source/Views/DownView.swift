@@ -38,8 +38,7 @@ open class DownView: WKWebView {
         if let templateBundle = templateBundle {
             self.bundle = templateBundle
         } else {
-            let classBundle = Bundle(for: DownView.self)
-            let url = classBundle.url(forResource: "DownView", withExtension: "bundle")!
+            let url = Bundle.module.url(forResource: "DownView", withExtension: "bundle")!
             self.bundle = Bundle(url: url)!
         }
 
